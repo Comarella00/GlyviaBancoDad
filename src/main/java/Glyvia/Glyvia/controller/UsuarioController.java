@@ -2,13 +2,16 @@ package Glyvia.Glyvia.controller;
 
 import Glyvia.Glyvia.dto.CadastroRequest;
 import Glyvia.Glyvia.dto.LoginRequest;
+import Glyvia.Glyvia.dto.PerguntasRequest;
 import Glyvia.Glyvia.dto.UsuarioResponse;
+import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +24,20 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody @Valid CadastroRequest request) {
+    public ResponseEntity<Map<String, Object>>  cadastrar(@RequestBody @Valid CadastroRequest request) {
         if (!request.getSenha().equals(request.getConfirmarSenha())) {
-            return ResponseEntity.badRequest().body("As senhas não coincidem!");
+            Map<String, Object> erro = new HashMap<>();
+            erro.put("mensagem", "As senhas não coincidem!");
+            return ResponseEntity.badRequest().body(erro);
         }
-        usuarioService.cadastrarInicial(request);
-        return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+
+        Usuario usuario = usuarioService.cadastrarInicial(request);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensagem", "Usuário cadastrado com sucesso!");
+        response.put("id", usuario.getId());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
@@ -37,6 +48,16 @@ public class UsuarioController {
         } else {
             return ResponseEntity.badRequest().body(resultado);
         }
+    }
+
+    @PostMapping("/perguntas/{id}")
+    public ResponseEntity<Map<String, String>> responderPerguntas(@PathVariable Long id, @RequestBody PerguntasRequest request) {
+        usuarioService.atualizarPerguntas(id, request);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("mensagem", "Dados complementares salvos com sucesso!");
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/listar")

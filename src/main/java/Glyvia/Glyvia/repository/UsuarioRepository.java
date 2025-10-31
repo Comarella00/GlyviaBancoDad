@@ -1,10 +1,13 @@
-package Glyvia.Glyvia.repository;
+    package Glyvia.Glyvia.repository;
 
-import Glyvia.Glyvia.model.Usuario;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+    import Glyvia.Glyvia.model.Usuario;
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    import java.util.Optional;
 
-}
+    @Repository
+    public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+        Optional<Usuario> findByEmail(String email); //Encontrar o usuario por email
+
+    }

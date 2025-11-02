@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CadastroRequest {
+public class CadastroUsuarioRequest {
     @NotBlank
     private String email;
 

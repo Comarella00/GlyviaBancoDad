@@ -1,6 +1,6 @@
 package Glyvia.Glyvia.service;
 
-import Glyvia.Glyvia.dto.CadastroRequest;
+import Glyvia.Glyvia.dto.CadastroUsuarioRequest;
 import Glyvia.Glyvia.dto.LoginRequest;
 import Glyvia.Glyvia.dto.PerguntasRequest;
 import Glyvia.Glyvia.dto.UsuarioResponse;
@@ -18,7 +18,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario cadastrarInicial(CadastroRequest request) {
+    public Usuario cadastrarInicial(CadastroUsuarioRequest request) {
         Usuario usuario = new Usuario();
         usuario.setEmail(request.getEmail());
         usuario.setSenha(request.getSenha());

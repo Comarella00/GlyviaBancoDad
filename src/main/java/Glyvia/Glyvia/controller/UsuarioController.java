@@ -1,19 +1,22 @@
 package Glyvia.Glyvia.controller;
 
-import Glyvia.Glyvia.dto.CadastroRequest;
+import Glyvia.Glyvia.dto.CadastroUsuarioRequest;
 import Glyvia.Glyvia.dto.LoginRequest;
 import Glyvia.Glyvia.dto.PerguntasRequest;
 import Glyvia.Glyvia.dto.UsuarioResponse;
 import Glyvia.Glyvia.model.Usuario;
+import Glyvia.Glyvia.repository.UsuarioRepository;
 import Glyvia.Glyvia.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -23,8 +26,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @PostMapping("/cadastro")
-    public ResponseEntity<Map<String, Object>>  cadastrar(@RequestBody @Valid CadastroRequest request) {
+    public ResponseEntity<Map<String, Object>> cadastrar(@RequestBody @Valid CadastroUsuarioRequest request) {
         if (!request.getSenha().equals(request.getConfirmarSenha())) {
             Map<String, Object> erro = new HashMap<>();
             erro.put("mensagem", "As senhas não coincidem!");
@@ -38,16 +44,6 @@ public class UsuarioController {
         response.put("id", usuario.getId());
 
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
-        String resultado = usuarioService.login(request);
-        if (resultado.startsWith("Login")) {
-            return ResponseEntity.ok(resultado);
-        } else {
-            return ResponseEntity.badRequest().body(resultado);
-        }
     }
 
     @PostMapping("/perguntas/{id}")
@@ -64,6 +60,24 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioResponse>> listarUsuarios() {
         List<UsuarioResponse> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Usuario request) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmailAndSenha(
+                request.getEmail(), request.getSenha());
+
+        if (usuario.isPresent()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("mensagem", "Login realizado com sucesso!");
+            response.put("idUsuario", usuario.get().getId());
+            response.put("email", usuario.get().getEmail());
+            return ResponseEntity.ok(response);
+        } else {
+            Map<String, Object> response = new HashMap<>();
+            response.put("erro", "Credenciais inválidas!");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
     }
 
 }

@@ -14,28 +14,25 @@ import java.time.LocalTime;
 @Setter
 @Getter
 public class Glicemia {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_glicemia")
     private Long idGlicemia;
 
-    //Na aba de adicionar glicemia
-    @Column(name = "valorGlicemia", length = 100, nullable = false)
+    @Column(name = "valor_glicemia", nullable = false)
     private Double valorGlicemia;
 
-    @Column(name = "dataGlicemia", length = 100, nullable = false)
+    @Column(name = "data_glicemia", nullable = false)
     private LocalDate dataGlicemia;
 
-    @Column(name = "horaGlicemia", length = 100, nullable = false)
+    @Column(name = "hora_glicemia", nullable = false)
     private LocalTime horaGlicemia;
 
-
-    //Na aba de alerta
-    @Column(name = "checagemGlicemia", length = 100, nullable = false)
+    @Column(name = "checagem_glicemia")
     private Double checagemGlicemia;
 
-
-    // 🔗 Relacionamento com o usuário
     @ManyToOne
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 }

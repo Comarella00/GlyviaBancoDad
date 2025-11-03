@@ -20,7 +20,7 @@ public class Historico {
     private Long idHistorico;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "id")
     private Usuario usuario;
 
     @ManyToOne

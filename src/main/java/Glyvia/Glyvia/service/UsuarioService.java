@@ -18,6 +18,8 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+
+    //Cadastro do usuário
     public Usuario cadastrarInicial(CadastroUsuarioRequest request) {
         Usuario usuario = new Usuario();
         usuario.setEmail(request.getEmail());
@@ -25,19 +27,16 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public String login(LoginRequest request) {
+    //Login do usuário existente no bd
+    public Optional<Usuario> loginUsuario(LoginRequest request) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(request.getEmail());
-        if (usuario.isEmpty()) {
-            return "Usuário não encontrado!";
+        if (usuario.isPresent() && usuario.get().getSenha().equals(request.getSenha())) {
+            return usuario;
         }
-
-        if (!usuario.get().getSenha().equals(request.getSenha())) {
-            return "Senha incorreta!";
-        }
-
-        return "Login realizado com sucesso!";
+        return Optional.empty();
     }
 
+    //Alterar de null para informações concretas as perguntas básicas pro usuário
     public void atualizarPerguntas(Long id, PerguntasRequest request) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
@@ -53,9 +52,9 @@ public class UsuarioService {
         usuario.setDataNascimento(request.getDataNascimento());
 
         usuarioRepository.save(usuario);
-
     }
 
+    //Lista as perguntas que foram feitas ao usuário
     public List<UsuarioResponse> listarTodos() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios.stream()

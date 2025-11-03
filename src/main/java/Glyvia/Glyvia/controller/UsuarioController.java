@@ -29,6 +29,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    //POST com o cadastro do usuário
     @PostMapping("/cadastro")
     public ResponseEntity<Map<String, Object>> cadastrar(@RequestBody @Valid CadastroUsuarioRequest request) {
         if (!request.getSenha().equals(request.getConfirmarSenha())) {
@@ -46,6 +47,7 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    //POST com as perguntas vinculadas ao id do usuário
     @PostMapping("/perguntas/{id}")
     public ResponseEntity<Map<String, String>> responderPerguntas(@PathVariable Long id, @RequestBody PerguntasRequest request) {
         usuarioService.atualizarPerguntas(id, request);
@@ -56,21 +58,22 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    //GET para listar os usuários existentes
     @GetMapping("/listar")
     public ResponseEntity<List<UsuarioResponse>> listarUsuarios() {
         List<UsuarioResponse> usuarios = usuarioService.listarTodos();
         return ResponseEntity.ok(usuarios);
     }
 
+    //POST com o login do usuário existente no bd
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario request) {
-        Optional<Usuario> usuario = usuarioRepository.findByEmailAndSenha(
-                request.getEmail(), request.getSenha());
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Optional<Usuario> usuario = usuarioService.loginUsuario(request);
 
         if (usuario.isPresent()) {
             Map<String, Object> response = new HashMap<>();
             response.put("mensagem", "Login realizado com sucesso!");
-            response.put("idUsuario", usuario.get().getId());
+            response.put("id", usuario.get().getId());
             response.put("email", usuario.get().getEmail());
             return ResponseEntity.ok(response);
         } else {

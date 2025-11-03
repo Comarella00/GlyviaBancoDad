@@ -1,7 +1,5 @@
 package Glyvia.Glyvia.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,17 +10,8 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CadastroGlicemiaRequest {
-
-    @NotNull
+public class HistoricoGlicemiaResponse {
     private Double valorGlicemia;
-
-    @NotNull
     private LocalDate dataGlicemia;
-
-    @NotNull
     private LocalTime horaGlicemia;
-
-    @NotNull
-    private Long idUsuario;
 }

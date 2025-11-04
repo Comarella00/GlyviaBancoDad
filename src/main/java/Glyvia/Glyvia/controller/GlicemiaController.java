@@ -1,5 +1,6 @@
 package Glyvia.Glyvia.controller;
 
+import Glyvia.Glyvia.dto.AtualizaGlicemiaRequest;
 import Glyvia.Glyvia.dto.CadastroGlicemiaRequest;
 import Glyvia.Glyvia.dto.HistoricoGlicemiaResponse;
 import Glyvia.Glyvia.model.Glicemia;
@@ -39,5 +40,17 @@ public class GlicemiaController {
     public ResponseEntity<List<HistoricoGlicemiaResponse>> historicoRecente(@PathVariable Long idUsuario) {
         List<HistoricoGlicemiaResponse> historico = glicemiaService.historicoRecente(idUsuario);
         return ResponseEntity.ok(historico);
+    }
+
+    //PUT para atualizar glicemia existente
+    @PutMapping("/atualizarGlicemia")
+    public ResponseEntity<Map<String, Object>> atualizarGlicemia(@RequestBody AtualizaGlicemiaRequest request) {
+        Glicemia glicemiaAtualizada = glicemiaService.atualizarGlicemia(request);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("mensagem", "Glicemia atualizada com sucesso!");
+        response.put("idGlicemia", glicemiaAtualizada.getIdGlicemia());
+
+        return ResponseEntity.ok(response);
     }
 }

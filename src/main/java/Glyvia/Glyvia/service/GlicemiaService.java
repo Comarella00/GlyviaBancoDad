@@ -1,5 +1,6 @@
 package Glyvia.Glyvia.service;
 
+import Glyvia.Glyvia.dto.AtualizaGlicemiaRequest;
 import Glyvia.Glyvia.dto.CadastroGlicemiaRequest;
 import Glyvia.Glyvia.dto.HistoricoGlicemiaResponse;
 import Glyvia.Glyvia.model.Glicemia;
@@ -40,9 +41,37 @@ public class GlicemiaService {
 
         return glicemias.stream()
                 .map(g -> new HistoricoGlicemiaResponse(
+                        g.getIdGlicemia(),
                         g.getValorGlicemia(),
                         g.getDataGlicemia(),
                         g.getHoraGlicemia()))
                 .collect(Collectors.toList());
+    }
+
+    //UPDATE da glicemia
+    public Glicemia atualizarGlicemia(AtualizaGlicemiaRequest request) {
+        Glicemia glicemia = glicemiaRepository.findById(request.getIdGlicemia())
+                .orElseThrow(() -> new RuntimeException("Glicemia não encontrada"));
+
+        if (request.getValorGlicemia() != null)
+            glicemia.setValorGlicemia(request.getValorGlicemia());
+
+        if (request.getDataGlicemia() != null)
+            glicemia.setDataGlicemia(request.getDataGlicemia());
+
+        if (request.getHoraGlicemia() != null)
+            glicemia.setHoraGlicemia(request.getHoraGlicemia());
+
+        if (request.getChecagemGlicemia() != null)
+            glicemia.setChecagemGlicemia(request.getChecagemGlicemia());
+
+        // Verifica se o idUsuario foi enviado e atualiza o vínculo (geralmente não muda)
+        if (request.getIdUsuario() != null) {
+            Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            glicemia.setUsuario(usuario);
+        }
+
+        return glicemiaRepository.save(glicemia);
     }
 }

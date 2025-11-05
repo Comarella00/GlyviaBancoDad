@@ -1,8 +1,6 @@
 package Glyvia.Glyvia.controller;
 
-import Glyvia.Glyvia.dto.AtualizaGlicemiaRequest;
-import Glyvia.Glyvia.dto.CadastroGlicemiaRequest;
-import Glyvia.Glyvia.dto.HistoricoGlicemiaResponse;
+import Glyvia.Glyvia.dto.*;
 import Glyvia.Glyvia.model.Glicemia;
 import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.service.GlicemiaService;
@@ -52,5 +50,23 @@ public class GlicemiaController {
         response.put("idGlicemia", glicemiaAtualizada.getIdGlicemia());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/ultimaGlicemia/{idUsuario}")
+    public ResponseEntity<UltimaGlicemiaRequest> getUltimaGlicemia(@PathVariable Long idUsuario) {
+        UltimaGlicemiaRequest ultima = glicemiaService.getUltimaGlicemia(idUsuario);
+        return ResponseEntity.ok(ultima);
+    }
+
+    @GetMapping("/mediaDiaria/{idUsuario}")
+    public ResponseEntity<MediaDiariaGlicemiaRequest> getMediaDiaria(@PathVariable Long idUsuario) {
+        MediaDiariaGlicemiaRequest media = glicemiaService.getMediaDiaria(idUsuario);
+        return ResponseEntity.ok(media);
+    }
+
+    @GetMapping("/statusRapido/{idUsuario}")
+    public ResponseEntity<StatusRapidoRequest> getStatusRapido(@PathVariable Long idUsuario) {
+        StatusRapidoRequest status = glicemiaService.getStatusRapido(idUsuario);
+        return ResponseEntity.ok(status);
     }
 }

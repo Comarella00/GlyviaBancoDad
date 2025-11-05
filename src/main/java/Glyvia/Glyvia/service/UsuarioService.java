@@ -71,4 +71,12 @@ public class UsuarioService {
                         u.getDataNascimento()))
                 .collect(Collectors.toList());
     }
+
+    public void atualizarTema(Long id, String tema) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        usuario.setTemaPreferido(tema);
+        usuarioRepository.save(usuario);
+    }
+
 }

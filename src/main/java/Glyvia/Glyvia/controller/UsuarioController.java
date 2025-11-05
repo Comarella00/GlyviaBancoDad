@@ -75,6 +75,7 @@ public class UsuarioController {
             response.put("mensagem", "Login realizado com sucesso!");
             response.put("id", usuario.get().getId());
             response.put("email", usuario.get().getEmail());
+            response.put("temaPreferido", usuario.get().getTemaPreferido()); // 🔹 Adiciona o tema
             return ResponseEntity.ok(response);
         } else {
             Map<String, Object> response = new HashMap<>();
@@ -82,5 +83,18 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+    @PutMapping("/{id}/tema")
+    public ResponseEntity<Map<String, String>> atualizarTema(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        String tema = body.get("tema");
+        usuarioService.atualizarTema(id, tema);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("mensagem", "Tema atualizado com sucesso!");
+        return ResponseEntity.ok(response);
+    }
+
 
 }

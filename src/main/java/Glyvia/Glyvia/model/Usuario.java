@@ -35,6 +35,11 @@ public class Usuario {
     private Double icr; // índice de carboidrato/insulina
     private String dataNascimento;
 
+    @Column(name = "tema_preferido")
+    private String temaPreferido = "light";
+
     public Usuario(String email, String senha) {
     }
+
+
 }

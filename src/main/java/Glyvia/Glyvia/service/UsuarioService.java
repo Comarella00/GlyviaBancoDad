@@ -1,14 +1,14 @@
 package Glyvia.Glyvia.service;
 
-import Glyvia.Glyvia.dto.CadastroUsuarioRequest;
-import Glyvia.Glyvia.dto.LoginRequest;
-import Glyvia.Glyvia.dto.PerguntasRequest;
-import Glyvia.Glyvia.dto.UsuarioResponse;
+import Glyvia.Glyvia.dto.*;
+import Glyvia.Glyvia.model.Glicemia;
 import Glyvia.Glyvia.model.Usuario;
+import Glyvia.Glyvia.repository.GlicemiaRepository;
 import Glyvia.Glyvia.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +18,8 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private GlicemiaRepository glicemiaRepository;
 
     //Cadastro do usuário
     public Usuario cadastrarInicial(CadastroUsuarioRequest request) {

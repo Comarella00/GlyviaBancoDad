@@ -105,4 +105,17 @@ public class GlicemiaService {
         boolean dentroFaixa = ultima.getValorGlicemia() >= 70 && ultima.getValorGlicemia() <= 180;
         return new StatusRapidoRequest(dentroFaixa);
     }
+
+    //GET gerar relatório da glicemia
+    public List<RelatorioGlicemiaRequest> gerarRelatorioGlicemia(Long idUsuario, LocalDate dataInicio, LocalDate dataFim) {
+        List<Glicemia> glicemias = glicemiaRepository
+                .findByUsuarioIdAndDataGlicemiaBetweenOrderByDataGlicemiaAscHoraGlicemiaAsc(idUsuario, dataInicio, dataFim);
+
+        return glicemias.stream()
+                .map(g -> new RelatorioGlicemiaRequest(
+                        g.getDataGlicemia(),
+                        g.getHoraGlicemia(),
+                        g.getValorGlicemia()))
+                .collect(Collectors.toList());
+    }
 }

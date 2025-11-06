@@ -2,12 +2,13 @@ package Glyvia.Glyvia.controller;
 
 import Glyvia.Glyvia.dto.*;
 import Glyvia.Glyvia.model.Glicemia;
-import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.service.GlicemiaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,5 +69,16 @@ public class GlicemiaController {
     public ResponseEntity<StatusRapidoRequest> getStatusRapido(@PathVariable Long idUsuario) {
         StatusRapidoRequest status = glicemiaService.getStatusRapido(idUsuario);
         return ResponseEntity.ok(status);
+    }
+
+    //GET relatorio glicemia;
+    //Ex: /relatorioGlicemia?idUsuario=18&inicio=2025-11-03&fim=2026-11-05
+    @GetMapping("/relatorioGlicemia")
+    public List<RelatorioGlicemiaRequest> gerarRelatorioGlicemia(
+            @RequestParam Long idUsuario,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+
+        return glicemiaService.gerarRelatorioGlicemia(idUsuario, inicio, fim);
     }
 }

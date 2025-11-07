@@ -9,9 +9,14 @@ import Glyvia.Glyvia.repository.UsuarioRepository;
 import Glyvia.Glyvia.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +88,8 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+
+    //PUT tema light/dark mode
     @PutMapping("/{id}/tema")
     public ResponseEntity<Map<String, String>> atualizarTema(
             @PathVariable Long id,
@@ -96,5 +103,48 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
+    //GET dados por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
+        return usuarioService.buscarPorId(id)
+                .map(usuario -> ResponseEntity.ok(usuario))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body((UsuarioResponse) Map.of("erro", "Usuário não encontrado")));
+    }
 
+    //POST da foto de perfil
+    @PostMapping("/{id}/foto")
+    public ResponseEntity<String> uploadFoto(@PathVariable Long id,
+                                             @RequestParam("foto") MultipartFile foto) {
+        try {
+            String caminho = usuarioService.salvarFoto(id, foto);
+            return ResponseEntity.ok("Foto salva com sucesso! Caminho: " + caminho);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError()
+                    .body("Erro ao salvar a foto: " + e.getMessage());
+        }
+    }
+
+    //Obter/exibir foto do usuário
+    @GetMapping("/{id}/foto")
+    public ResponseEntity<Resource> getFotoUsuario(@PathVariable Long id) {
+        try {
+            Resource resource = usuarioService.getFotoUsuario(id);
+
+            // Detecta tipo MIME automaticamente (image/png, image/jpeg, etc)
+            String contentType = "application/octet-stream";
+            try {
+                contentType = resource.getURL().openConnection().getContentType();
+            } catch (IOException ignored) {}
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+
+        } catch (IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

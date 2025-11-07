@@ -34,6 +34,7 @@ public class Usuario {
     private Double metaGlicemica;
     private Double icr; // índice de carboidrato/insulina
     private String dataNascimento;
+    private String fotoPerfil;
 
     @Column(name = "tema_preferido")
     private String temaPreferido = "light";

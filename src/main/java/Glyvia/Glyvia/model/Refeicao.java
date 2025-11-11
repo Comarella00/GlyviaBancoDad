@@ -21,16 +21,20 @@ public class Refeicao {
     private Long idRefeicao;
 
     @ManyToOne
-    @JoinColumn(name = "idUsuario")
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "idGlicemia")
+    @JoinColumn(name = "id_glicemia")
     private Glicemia glicemia;
 
     @Lob
     @Column(name = "foto", nullable = false)
     private byte[] foto;
+
+    @NotNull(message = "Obrigatório o campo descrição!")
+    @Column(name = "descricao", length = 100, nullable = false)
+    private String descricao;
 
     @NotNull(message = "Obrigatório o campo calorias!")
     @Column(name = "calorias", length = 100, nullable = false)

@@ -29,7 +29,7 @@ public class UsuarioService {
     private GlicemiaRepository glicemiaRepository;
 
     //Salva a foto de perfil nesse path
-    private final Path uploadDir = Paths.get("C:\\Users\\aline\\GlyviaBancoDad\\uploads\\fotos");
+    private final Path uploadDir = Paths.get(".\\uploads\\fotos");
 
     //Cadastro do usuário
     public Usuario cadastrarInicial(CadastroUsuarioRequest request) {

@@ -24,7 +24,7 @@ public class RefeicaoController {
         return ResponseEntity.ok(refeicao);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<Refeicao>> listar() {
         return ResponseEntity.ok(refeicaoService.listarTodos());
     }

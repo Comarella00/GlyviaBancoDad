@@ -84,7 +84,8 @@ public class UsuarioService {
                         u.getIcr(),
                         u.getFs(),
                         u.getDataNascimento(),
-                        u.getFotoPerfil()
+                        u.getFotoPerfil(),
+                        u.getTemaPreferido()
                 ))
                 .collect(Collectors.toList());
     }
@@ -105,6 +106,9 @@ public class UsuarioService {
                     response.setId(usuario.getId());
                     response.setNome(usuario.getNome());
                     response.setEmail(usuario.getEmail());
+                    response.setFotoPerfil(usuario.getFotoPerfil());
+                    response.setTemaPreferido(usuario.getTemaPreferido());
+
                     return response;
                 });
     }

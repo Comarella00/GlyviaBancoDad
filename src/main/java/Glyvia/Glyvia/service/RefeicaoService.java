@@ -1,6 +1,8 @@
 package Glyvia.Glyvia.service;
 
 import Glyvia.Glyvia.dto.AddCarboManualmenteRequest;
+import Glyvia.Glyvia.dto.RelatorioCaloriaRequest;
+import Glyvia.Glyvia.dto.RelatorioCarboidratoRequest;
 import Glyvia.Glyvia.model.Refeicao;
 import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.repository.RefeicaoRepository;
@@ -8,7 +10,9 @@ import Glyvia.Glyvia.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RefeicaoService {
@@ -36,5 +40,35 @@ public class RefeicaoService {
 
     public List<Refeicao> listarTodos() {
         return refeicaoRepository.findAll();
+    }
+
+    public List<Refeicao> buscarRelatorioRefeicao(Long idUsuario, LocalDate inicio, LocalDate fim) {
+        return refeicaoRepository.findByUsuarioIdAndDataRefeicaoBetween(idUsuario, inicio, fim);
+    }
+
+    // GET relatório de calorias
+    public List<RelatorioCaloriaRequest> gerarRelatorioCaloria(Long idUsuario, LocalDate dataInicio, LocalDate dataFim) {
+        List<Refeicao> refeicoes = refeicaoRepository
+                .findByUsuarioIdAndDataRefeicaoBetweenOrderByDataRefeicaoAscHoraRefeicaoAsc(idUsuario, dataInicio, dataFim);
+
+        return refeicoes.stream()
+                .map(r -> new RelatorioCaloriaRequest(
+                        r.getDataRefeicao(),
+                        r.getHoraRefeicao(),
+                        r.getCalorias()))
+                .collect(Collectors.toList());
+    }
+
+    // GET relatório de carboidratos
+    public List<RelatorioCarboidratoRequest> gerarRelatorioCarboidrato(Long idUsuario, LocalDate dataInicio, LocalDate dataFim) {
+        List<Refeicao> refeicoes = refeicaoRepository
+                .findByUsuarioIdAndDataRefeicaoBetweenOrderByDataRefeicaoAscHoraRefeicaoAsc(idUsuario, dataInicio, dataFim);
+
+        return refeicoes.stream()
+                .map(r -> new RelatorioCarboidratoRequest(
+                        r.getDataRefeicao(),
+                        r.getHoraRefeicao(),
+                        r.getCarboidratos()))
+                .collect(Collectors.toList());
     }
 }

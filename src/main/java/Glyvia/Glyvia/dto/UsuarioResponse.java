@@ -22,4 +22,5 @@ public class UsuarioResponse {
     private Double fs;
     private String dataNascimento;
     private String fotoPerfil;
+    private String temaPreferido;
 }

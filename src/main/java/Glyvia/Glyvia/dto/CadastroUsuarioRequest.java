@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 public class CadastroUsuarioRequest {
     @NotBlank
     private String email;
-
     @NotBlank
     private String senha;
-
     @NotBlank
     private String confirmarSenha;
 }

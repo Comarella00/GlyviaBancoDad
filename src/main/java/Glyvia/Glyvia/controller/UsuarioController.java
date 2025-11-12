@@ -114,16 +114,11 @@ public class UsuarioController {
 
     //POST da foto de perfil
     @PostMapping("/{id}/foto")
-    public ResponseEntity<String> uploadFoto(@PathVariable Long id,
-                                             @RequestParam("foto") MultipartFile foto) {
-        try {
-            String caminho = usuarioService.salvarFoto(id, foto);
-            return ResponseEntity.ok("Foto salva com sucesso! Caminho: " + caminho);
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError()
-                    .body("Erro ao salvar a foto: " + e.getMessage());
-        }
+    public ResponseEntity<String> uploadFoto(@PathVariable Long id, @RequestParam("foto") MultipartFile foto) throws IOException {
+        String nomeArquivo = usuarioService.salvarFoto(id, foto);
+        return ResponseEntity.ok(nomeArquivo);
     }
+
 
     //Obter/exibir foto do usuário
     @GetMapping("/{id}/foto")

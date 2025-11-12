@@ -73,7 +73,7 @@ public class GlicemiaController {
 
     //GET relatorio glicemia;
     //Ex: /relatorioGlicemia?idUsuario=18&inicio=2025-11-03&fim=2026-11-05
-    @GetMapping("/relatorioGlicemia")
+    @GetMapping("/relatorio-glicemia")
     public List<RelatorioGlicemiaRequest> gerarRelatorioGlicemia(
             @RequestParam Long idUsuario,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,

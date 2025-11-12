@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Data
@@ -29,9 +31,9 @@ public class AddCarboManualmenteRequest {
         private Double insulina;
 
         @Column(name = "dataRefeicao", length = 100, nullable = false)
-        private Date dataRefeicao;
+        private LocalDate dataRefeicao;
 
         @Column(name = "horaRefeicao", length = 100, nullable = false)
-        private Time horaRefeicao;
+        private LocalTime horaRefeicao;
 
 }

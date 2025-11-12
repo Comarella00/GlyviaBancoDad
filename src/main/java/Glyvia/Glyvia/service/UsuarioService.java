@@ -100,7 +100,13 @@ public class UsuarioService {
     //Busca por ID
     public Optional<UsuarioResponse> buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .map(UsuarioResponse::new);
+                .map(usuario -> {
+                    UsuarioResponse response = new UsuarioResponse();
+                    response.setId(usuario.getId());
+                    response.setNome(usuario.getNome());
+                    response.setEmail(usuario.getEmail());
+                    return response;
+                });
     }
 
     //Salva a foto de perfil

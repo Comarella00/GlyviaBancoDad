@@ -61,6 +61,7 @@ public class UsuarioService {
         usuario.setAltura(request.getAltura());
         usuario.setMetaGlicemica(request.getMetaGlicemica());
         usuario.setIcr(request.getIcr());
+        usuario.setFs(request.getFs());
         usuario.setDataNascimento(request.getDataNascimento());
 
         usuarioRepository.save(usuario);
@@ -81,6 +82,7 @@ public class UsuarioService {
                         u.getAltura(),
                         u.getMetaGlicemica(),
                         u.getIcr(),
+                        u.getFs(),
                         u.getDataNascimento(),
                         u.getFotoPerfil()
                 ))

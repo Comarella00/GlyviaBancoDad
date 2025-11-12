@@ -33,6 +33,7 @@ public class Usuario {
     private Double altura;
     private Double metaGlicemica;
     private Double icr; // índice de carboidrato/insulina
+    private Double fs; // fator de sensibilidade
     private String dataNascimento;
     private String fotoPerfil;
 

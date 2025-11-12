@@ -11,5 +11,6 @@ public class PerguntasRequest {
     private Double altura;
     private Double metaGlicemica;
     private Double icr;
+    private Double fs;
     private String dataNascimento;
 }

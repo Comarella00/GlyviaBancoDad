@@ -1,6 +1,8 @@
 package Glyvia.Glyvia.dto;
 
 import Glyvia.Glyvia.model.Usuario;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public class UsuarioResponse {
 
@@ -14,16 +16,17 @@ public class UsuarioResponse {
     private Double altura;
     private Double metaGlicemica;
     private Double icr;
+    private Double fs;
     private String dataNascimento;
     private String fotoPerfil; // ✅ novo campo
 
     // ✅ Construtor padrão (necessário para o Jackson e frameworks)
-    public UsuarioResponse() {}
+    public UsuarioResponse(Long id, @NotBlank(message = "Obrigatório o campo email!") @Email(message = "Formato de email inválido!") String email, String nome, String genero, String tipoInsulina, String viaAplicacao, Double pesoAtual, Double altura, Double metaGlicemica, Double fs, Double usuarioFs, Double icr, String dataNascimento, String fotoPerfil) {}
 
     // ✅ Construtor usado no stream
     public UsuarioResponse(Long id, String email, String nome, String genero, String tipoInsulina,
                            String viaAplicacao, Double pesoAtual, Double altura,
-                           Double metaGlicemica, Double icr, String dataNascimento, String fotoPerfil) {
+                           Double metaGlicemica, Double icr,Double fs, String dataNascimento, String fotoPerfil) {
         this.id = id;
         this.email = email;
         this.nome = nome;
@@ -34,6 +37,7 @@ public class UsuarioResponse {
         this.altura = altura;
         this.metaGlicemica = metaGlicemica;
         this.icr = icr;
+        this.fs = fs;
         this.dataNascimento = dataNascimento;
         this.fotoPerfil = fotoPerfil;
     }
@@ -44,6 +48,7 @@ public class UsuarioResponse {
                 usuario.getGenero(), usuario.getTipoInsulina(),
                 usuario.getViaAplicacao(), usuario.getPesoAtual(),
                 usuario.getAltura(), usuario.getMetaGlicemica(),
+                usuario.getFs(), usuario.getFs(),
                 usuario.getIcr(), usuario.getDataNascimento(),
                 usuario.getFotoPerfil());
     }
@@ -78,6 +83,9 @@ public class UsuarioResponse {
 
     public Double getIcr() { return icr; }
     public void setIcr(Double icr) { this.icr = icr; }
+
+    public Double getFs() { return fs; } // 👈 getter
+    public void setFs(Double fs) { this.fs = fs; } // 👈 setter
 
     public String getDataNascimento() { return dataNascimento; }
     public void setDataNascimento(String dataNascimento) { this.dataNascimento = dataNascimento; }

@@ -2,7 +2,11 @@ package Glyvia.Glyvia.controller;
 
 import Glyvia.Glyvia.dto.RemedioRequest;
 import Glyvia.Glyvia.model.Remedio;
+import Glyvia.Glyvia.model.Usuario;
+import Glyvia.Glyvia.repository.RemedioRepository;
+import Glyvia.Glyvia.repository.UsuarioRepository;
 import Glyvia.Glyvia.service.RemedioService;
+import Glyvia.Glyvia.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +20,30 @@ public class RemedioController {
     @Autowired
     private RemedioService remedioService;
 
+    @Autowired
+    private RemedioRepository remedioRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     //POST para adicionar remédio
     @PostMapping("/adicionar")
-    public ResponseEntity<Remedio> adicionar(@RequestBody RemedioRequest dto) {
-        Remedio remedio = remedioService.salvar(dto);
-        return ResponseEntity.ok(remedio);
+    public ResponseEntity<?> adicionarRemedio(@RequestBody Remedio remedio) {
+        if (remedio.getUsuario() == null || remedio.getUsuario().getId() == null) {
+            return ResponseEntity.badRequest().body("Usuário é obrigatório.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(remedio.getUsuario().getId())
+                .orElse(null);
+
+        if (usuario == null) {
+            return ResponseEntity.badRequest().body("Usuário não encontrado.");
+        }
+
+        remedio.setUsuario(usuario);
+        Remedio salvo = remedioRepository.save(remedio);
+
+        return ResponseEntity.ok(salvo);
     }
 
     //GET listar todos

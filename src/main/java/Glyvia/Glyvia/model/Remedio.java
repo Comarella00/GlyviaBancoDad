@@ -27,7 +27,7 @@ public class Remedio {
     private boolean tomado = false;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
 }

@@ -25,4 +25,9 @@ public class Remedio {
     private LocalTime horario;
 
     private boolean tomado = false;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
 }

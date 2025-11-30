@@ -26,7 +26,7 @@ public class RemedioService {
     }
 
     public List<Remedio> listarPorUsuario(Long idUsuario) {
-        return remedioRepository.findByUsuarioId(idUsuario);
+        return remedioRepository.findByUsuario_Id(idUsuario);
     }
 
     public Remedio buscarPorId(Long id) {

@@ -14,4 +14,5 @@ public class RelatorioCaloriaRequest {
     private LocalDate dataRefeicao;
     private LocalTime horaRefeicao;
     private Double calorias;
+
 }

@@ -1,10 +1,12 @@
 package Glyvia.Glyvia.service;
 
-import Glyvia.Glyvia.dto.AddCarboManualmenteRequest;
+import Glyvia.Glyvia.dto.RefeicaoRequest;
 import Glyvia.Glyvia.dto.RelatorioCaloriaRequest;
 import Glyvia.Glyvia.dto.RelatorioCarboidratoRequest;
+import Glyvia.Glyvia.model.Glicemia;
 import Glyvia.Glyvia.model.Refeicao;
 import Glyvia.Glyvia.model.Usuario;
+import Glyvia.Glyvia.repository.GlicemiaRepository;
 import Glyvia.Glyvia.repository.RefeicaoRepository;
 import Glyvia.Glyvia.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RefeicaoService {
@@ -22,53 +23,41 @@ public class RefeicaoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Refeicao salvar(AddCarboManualmenteRequest dto) {
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + dto.getUsuarioId()));
+    @Autowired
+    private GlicemiaRepository glicemiaRepository;
 
-        Refeicao refeicao = new Refeicao();
-        refeicao.setUsuario(usuario);
-        refeicao.setDescricao(dto.getDescricao());
-        refeicao.setCalorias(dto.getCalorias());
-        refeicao.setCarboidratos(dto.getCarboidratos());
-        refeicao.setInsulina(dto.getInsulina());
-        refeicao.setDataRefeicao(dto.getDataRefeicao());
-        refeicao.setHoraRefeicao(dto.getHoraRefeicao());
+    public Refeicao salvar(RefeicaoRequest dto) {
 
-        return refeicaoRepository.save(refeicao);
+        Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        Glicemia glicemia = null;
+        if (dto.getIdGlicemia() != null) {
+            glicemia = glicemiaRepository.findById(dto.getIdGlicemia())
+                    .orElseThrow(() -> new RuntimeException("Glicemia não encontrada"));
+        }
+
+        Refeicao r = new Refeicao();
+        r.setDescricao(dto.getDescricao());
+        r.setCalorias(dto.getCalorias());
+        r.setCarboidratos(dto.getCarboidratos());
+        r.setDataRefeicao(dto.getDataRefeicao());
+        r.setHoraRefeicao(dto.getHoraRefeicao());
+        r.setUsuario(usuario);
+        r.setGlicemia(glicemia);
+
+        return refeicaoRepository.save(r);
     }
 
-    public List<Refeicao> listarTodos() {
-        return refeicaoRepository.findAll();
+    public List<Refeicao> listarPorUsuario(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        return refeicaoRepository.findByUsuario(usuario);
     }
 
-    public List<Refeicao> buscarRelatorioRefeicao(Long idUsuario, LocalDate inicio, LocalDate fim) {
-        return refeicaoRepository.findByUsuarioIdAndDataRefeicaoBetween(idUsuario, inicio, fim);
+    public void deletar(Long id) {
+        refeicaoRepository.deleteById(id);
     }
 
-    // GET relatório de calorias
-    public List<RelatorioCaloriaRequest> gerarRelatorioCaloria(Long idUsuario, LocalDate dataInicio, LocalDate dataFim) {
-        List<Refeicao> refeicoes = refeicaoRepository
-                .findByUsuarioIdAndDataRefeicaoBetweenOrderByDataRefeicaoAscHoraRefeicaoAsc(idUsuario, dataInicio, dataFim);
-
-        return refeicoes.stream()
-                .map(r -> new RelatorioCaloriaRequest(
-                        r.getDataRefeicao(),
-                        r.getHoraRefeicao(),
-                        r.getCalorias()))
-                .collect(Collectors.toList());
-    }
-
-    // GET relatório de carboidratos
-    public List<RelatorioCarboidratoRequest> gerarRelatorioCarboidrato(Long idUsuario, LocalDate dataInicio, LocalDate dataFim) {
-        List<Refeicao> refeicoes = refeicaoRepository
-                .findByUsuarioIdAndDataRefeicaoBetweenOrderByDataRefeicaoAscHoraRefeicaoAsc(idUsuario, dataInicio, dataFim);
-
-        return refeicoes.stream()
-                .map(r -> new RelatorioCarboidratoRequest(
-                        r.getDataRefeicao(),
-                        r.getHoraRefeicao(),
-                        r.getCarboidratos()))
-                .collect(Collectors.toList());
-    }
 }

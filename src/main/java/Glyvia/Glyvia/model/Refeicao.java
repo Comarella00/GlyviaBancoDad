@@ -1,10 +1,8 @@
 package Glyvia.Glyvia.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -28,26 +26,19 @@ public class Refeicao {
     @JoinColumn(name = "id_glicemia")
     private Glicemia glicemia;
 
-    @Lob
-    @Column(name = "foto", nullable = false)
-    private byte[] foto;
-
-    @Column(name = "descricao", length = 100, nullable = false)
+    @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "calorias", length = 100, nullable = false)
+    @Column(name = "calorias")
     private Double calorias;
 
-    @Column(name = "carboidratos", length = 100, nullable = false)
+    @Column(name = "carboidratos")
     private Double carboidratos;
 
-    @Column(name = "insulina", length = 100, nullable = false)
-    private Double insulina;
-
-    @Column(name = "dataRefeicao", length = 100, nullable = false)
+    @Column(name = "dataRefeicao")
     private LocalDate dataRefeicao;
 
-    @Column(name = "horaRefeicao", nullable = false)
+    @Column(name = "horaRefeicao")
     private LocalTime horaRefeicao;
 
 }

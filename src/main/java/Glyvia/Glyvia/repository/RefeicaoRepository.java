@@ -11,4 +11,13 @@ public interface RefeicaoRepository extends JpaRepository<Refeicao, Long> {
     List<Refeicao> findByUsuario(Usuario usuario);
 
     List<Refeicao> findByUsuarioIdAndDataRefeicaoBetween(Long usuarioId, LocalDate inicio, LocalDate fim);
+
+    List<Refeicao> findByUsuarioIdAndDataRefeicaoBetweenOrderByDataRefeicaoAscHoraRefeicaoAsc(
+            Long idUsuario,
+            LocalDate inicio,
+            LocalDate fim
+    );
+
+    List<Refeicao> findByUsuarioIdOrderByDataRefeicaoDescHoraRefeicaoDesc(Long idUsuario);
+
 }

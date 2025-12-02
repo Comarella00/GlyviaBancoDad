@@ -1,9 +1,6 @@
 package Glyvia.Glyvia.controller;
 
-import Glyvia.Glyvia.dto.CadastroUsuarioRequest;
-import Glyvia.Glyvia.dto.LoginRequest;
-import Glyvia.Glyvia.dto.PerguntasRequest;
-import Glyvia.Glyvia.dto.UsuarioResponse;
+import Glyvia.Glyvia.dto.*;
 import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.repository.UsuarioRepository;
 import Glyvia.Glyvia.service.UsuarioService;
@@ -107,10 +104,10 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         return usuarioService.buscarPorId(id)
-                .map(usuario -> ResponseEntity.ok(usuario))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body((UsuarioResponse) Map.of("erro", "Usuário não encontrado")));
+                .map(usuario -> ResponseEntity.ok(usuario)) // agora ok
+                .orElse(ResponseEntity.notFound().build());
     }
+
 
     //POST da foto de perfil
     @PostMapping("/{id}/foto")
@@ -142,4 +139,10 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}")
+    public Usuario atualizarUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioUpdateRequest dto) {
+        return usuarioService.atualizarUsuario(id, dto);
+    }
+
 }

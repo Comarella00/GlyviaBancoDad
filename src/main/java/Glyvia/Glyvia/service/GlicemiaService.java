@@ -73,6 +73,7 @@ public class GlicemiaService {
         return glicemiaRepository.save(glicemia);
     }
 
+    //GET da última glicemia
     public UltimaGlicemiaRequest getUltimaGlicemia(Long idUsuario) {
         Glicemia ultima = glicemiaRepository.findTopByUsuarioIdOrderByDataGlicemiaDescHoraGlicemiaDesc(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Nenhum registro de glicemia encontrado"));
@@ -80,6 +81,7 @@ public class GlicemiaService {
         return new UltimaGlicemiaRequest(ultima.getValorGlicemia(), ultima.getHoraGlicemia());
     }
 
+    //GET da média diária da glicemia
     public MediaDiariaGlicemiaRequest getMediaDiaria(Long idUsuario) {
         LocalDate hoje = LocalDate.now();
         List<Glicemia> glicemiasHoje = glicemiaRepository
@@ -97,6 +99,7 @@ public class GlicemiaService {
         return new MediaDiariaGlicemiaRequest(media);
     }
 
+    //GET do status rápido da média da glicemia
     public StatusRapidoRequest getStatusRapido(Long idUsuario) {
         Glicemia ultima = glicemiaRepository.findTopByUsuarioIdOrderByDataGlicemiaDescHoraGlicemiaDesc(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Nenhum registro de glicemia encontrado"));

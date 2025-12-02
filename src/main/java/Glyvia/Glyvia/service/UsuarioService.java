@@ -4,6 +4,7 @@ import Glyvia.Glyvia.dto.*;
 import Glyvia.Glyvia.model.Usuario;
 import Glyvia.Glyvia.repository.GlicemiaRepository;
 import Glyvia.Glyvia.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -101,17 +102,24 @@ public class UsuarioService {
     //Busca por ID
     public Optional<UsuarioResponse> buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .map(usuario -> {
-                    UsuarioResponse response = new UsuarioResponse();
-                    response.setId(usuario.getId());
-                    response.setNome(usuario.getNome());
-                    response.setEmail(usuario.getEmail());
-                    response.setFotoPerfil(usuario.getFotoPerfil());
-                    response.setTemaPreferido(usuario.getTemaPreferido());
-
-                    return response;
-                });
+                .map(u -> new UsuarioResponse(
+                        u.getId(),
+                        u.getEmail(),
+                        u.getNome(),
+                        u.getGenero(),
+                        u.getTipoInsulina(),
+                        u.getViaAplicacao(),
+                        u.getPesoAtual(),
+                        u.getAltura(),
+                        u.getMetaGlicemica(),
+                        u.getIcr(),
+                        u.getFs(),
+                        u.getDataNascimento(),
+                        u.getFotoPerfil(),
+                        u.getTemaPreferido()
+                ));
     }
+
 
     //Salva a foto de perfil
     public String salvarFoto(Long id, MultipartFile foto) throws IOException {
@@ -155,5 +163,30 @@ public class UsuarioService {
             throw new IOException("Não foi possível ler o arquivo: " + caminhoFoto);
         }
         return resource;
+    }
+
+    public Usuario atualizarUsuario(Long id, @Valid UsuarioUpdateRequest dto) {
+        Optional<Usuario> optional = usuarioRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new RuntimeException("Usuário não encontrado!");
+        }
+
+        Usuario usuario = optional.get();
+
+        // Atualiza apenas campos enviados
+        usuario.setEmail(dto.getEmail());
+        usuario.setSenha(dto.getSenha());
+        usuario.setNome(dto.getNome());
+        usuario.setGenero(dto.getGenero());
+        usuario.setTipoInsulina(dto.getTipoInsulina());
+        usuario.setViaAplicacao(dto.getViaAplicacao());
+        usuario.setPesoAtual(dto.getPesoAtual());
+        usuario.setAltura(dto.getAltura());
+        usuario.setMetaGlicemica(dto.getMetaGlicemica());
+        usuario.setIcr(dto.getIcr());
+        usuario.setFs(dto.getFs());
+        usuario.setDataNascimento(dto.getDataNascimento());
+
+        return usuarioRepository.save(usuario);
     }
 }

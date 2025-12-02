@@ -53,18 +53,21 @@ public class GlicemiaController {
         return ResponseEntity.ok(response);
     }
 
+    //GET da última glicemia
     @GetMapping("/ultimaGlicemia/{idUsuario}")
     public ResponseEntity<UltimaGlicemiaRequest> getUltimaGlicemia(@PathVariable Long idUsuario) {
         UltimaGlicemiaRequest ultima = glicemiaService.getUltimaGlicemia(idUsuario);
         return ResponseEntity.ok(ultima);
     }
 
+    //GET da média diária de glicemia
     @GetMapping("/mediaDiaria/{idUsuario}")
     public ResponseEntity<MediaDiariaGlicemiaRequest> getMediaDiaria(@PathVariable Long idUsuario) {
         MediaDiariaGlicemiaRequest media = glicemiaService.getMediaDiaria(idUsuario);
         return ResponseEntity.ok(media);
     }
 
+    //GET da média diária -> status da glicemia
     @GetMapping("/statusRapido/{idUsuario}")
     public ResponseEntity<StatusRapidoRequest> getStatusRapido(@PathVariable Long idUsuario) {
         StatusRapidoRequest status = glicemiaService.getStatusRapido(idUsuario);
